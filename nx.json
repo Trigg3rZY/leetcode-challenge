@@ -31,11 +31,6 @@
   },
   "generators": {
     "@nrwl/react": {
-      "application": {
-        "style": "styled-components",
-        "linter": "eslint",
-        "babel": true
-      },
       "component": {
         "style": "styled-components"
       },
@@ -43,12 +38,6 @@
         "style": "styled-components",
         "linter": "eslint"
       }
-    },
-    "@nrwl/web:application": {
-      "style": "css",
-      "linter": "eslint",
-      "unitTestRunner": "none",
-      "e2eTestRunner": "none"
     },
     "@nrwl/web:library": {
       "style": "css",
