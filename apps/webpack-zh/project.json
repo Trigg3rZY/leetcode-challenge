@@ -1,0 +1,62 @@
+{
+  "projectType": "application",
+  "root": "apps/webpack-zh",
+  "sourceRoot": "apps/webpack-zh/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/webpack-zh",
+        "compiler": "babel",
+        "index": "apps/webpack-zh/src/index.html",
+        "baseHref": "/",
+        "main": "apps/webpack-zh/src/main.ts",
+        "polyfills": "apps/webpack-zh/src/polyfills.ts",
+        "tsConfig": "apps/webpack-zh/tsconfig.app.json",
+        "assets": [
+          "apps/webpack-zh/src/favicon.ico",
+          "apps/webpack-zh/src/assets"
+        ],
+        "styles": ["apps/webpack-zh/src/styles.css"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/webpack-zh/src/environments/environment.ts",
+              "with": "apps/webpack-zh/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/web:dev-server",
+      "options": {
+        "buildTarget": "webpack-zh:build"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "webpack-zh:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/webpack-zh/**/*.ts"]
+      }
+    }
+  }
+}

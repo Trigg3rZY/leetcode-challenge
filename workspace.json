@@ -1,8 +1,8 @@
 {
   "version": 2,
   "projects": {
-    "app": "apps/app",
     "ui": "libs/ui",
-    "utils": "libs/utils"
+    "utils": "libs/utils",
+    "webpack-zh": "apps/webpack-zh"
   }
 }
