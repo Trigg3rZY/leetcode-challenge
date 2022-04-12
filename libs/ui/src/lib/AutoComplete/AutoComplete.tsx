@@ -67,6 +67,8 @@ export const AutoComplete = forwardRef<RefInput, AutoCompleteProps>(
       <>
         <S.AutoComplete ref={rootRef}>
           <RcInput
+            role="combobox"
+            type="search"
             ref={anchorElRef}
             value={inputValue}
             onChange={handleInputChange}

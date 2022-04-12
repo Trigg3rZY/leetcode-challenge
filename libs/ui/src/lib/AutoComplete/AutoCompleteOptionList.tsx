@@ -28,6 +28,9 @@ export const AutoCompleteOptionList = (props: AutoCompleteOptionListProps) => {
                 onSelect(option.value);
               }}
               style={style}
+              role="option"
+              // TODO: 完成键盘导航后使用正确的选中状态
+              aria-selected={false}
             >
               {option.label}
             </div>
