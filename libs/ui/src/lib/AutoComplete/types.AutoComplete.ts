@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, MouseEventHandler } from 'react';
 
 interface Option {
   label: string;
@@ -14,6 +14,7 @@ export interface AutoCompleteOptionListProps {
   options?: Option[];
   onSelect: (value: string) => void;
   style?: CSSProperties;
+  onMouseDown?: MouseEventHandler;
 }
 
 export interface RefInput {

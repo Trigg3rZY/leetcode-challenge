@@ -42,6 +42,7 @@ export const AutoCompleteOptionList = styled.div`
 
     .auto-complete-option-item {
       padding: 0 8px;
+      cursor: default;
     }
   }
 `;

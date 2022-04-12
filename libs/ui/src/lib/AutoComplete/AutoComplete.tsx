@@ -5,7 +5,9 @@ import {
   useMemo,
   useRef,
   useImperativeHandle,
+  useCallback,
 } from 'react';
+import type { ChangeEvent } from 'react';
 import RcInput, { InputRef } from 'rc-input';
 import { AutoCompleteOptionList } from './AutoCompleteOptionList';
 import type { AutoCompleteProps, RefInput } from './types.AutoComplete';
@@ -49,15 +51,29 @@ export const AutoComplete = forwardRef<RefInput, AutoCompleteProps>(
       []
     );
 
+    const handleInputChange = useCallback(
+      (e: ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        setInputValue(newValue);
+        if (newValue !== '') {
+          setPopupOpen(true);
+        }
+      },
+      []
+    );
+
     return (
       <>
         <S.AutoComplete ref={rootRef}>
           <RcInput
             ref={anchorElRef}
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={handleInputChange}
             onFocus={() => {
-              setPopupOpen(!!options.length);
+              setPopupOpen(true);
+            }}
+            onBlur={() => {
+              setPopupOpen(false);
             }}
           />
         </S.AutoComplete>
@@ -68,6 +84,10 @@ export const AutoComplete = forwardRef<RefInput, AutoCompleteProps>(
               onSelect={(value) => {
                 setInputValue(value);
                 setPopupOpen(false);
+              }}
+              onMouseDown={(e) => {
+                // do not blur input when select an option
+                e.preventDefault();
               }}
               style={{
                 width: rootRef.current ? rootRef.current.clientWidth : 'auto',

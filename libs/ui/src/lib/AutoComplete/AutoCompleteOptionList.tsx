@@ -5,12 +5,12 @@ import type { ListRef } from 'rc-virtual-list';
 import type { AutoCompleteOptionListProps } from './types.AutoComplete';
 
 export const AutoCompleteOptionList = (props: AutoCompleteOptionListProps) => {
-  const { options = [], onSelect, style } = props;
+  const { options = [], onSelect, style, onMouseDown } = props;
 
   const listRef = useRef<ListRef>(null);
 
   return (
-    <S.AutoCompleteOptionList>
+    <S.AutoCompleteOptionList onMouseDown={onMouseDown}>
       <div className="auto-complete-listbox" role="listbox" />
       <List
         className="auto-complete-option-list"
