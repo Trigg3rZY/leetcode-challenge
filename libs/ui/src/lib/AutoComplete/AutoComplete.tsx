@@ -16,7 +16,7 @@ import * as S from './styled.AutoComplete';
 
 export const AutoComplete = forwardRef<RefInput, AutoCompleteProps>(
   (props, ref) => {
-    const { options = [] } = props;
+    const { options = [], onSearch } = props;
 
     const rootRef = useRef<HTMLDivElement>(null);
     const anchorElRef = useRef<InputRef>(null);
@@ -55,11 +55,12 @@ export const AutoComplete = forwardRef<RefInput, AutoCompleteProps>(
       (e: ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
         setInputValue(newValue);
+        onSearch?.(newValue);
         if (newValue !== '') {
           setPopupOpen(true);
         }
       },
-      []
+      [onSearch]
     );
 
     return (
