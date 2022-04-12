@@ -1,14 +1,22 @@
-import { forwardRef, useEffect, useState, useMemo, useRef } from 'react';
+import {
+  forwardRef,
+  useEffect,
+  useState,
+  useMemo,
+  useRef,
+  useImperativeHandle,
+} from 'react';
 import RcInput, { InputRef } from 'rc-input';
 import { AutoCompleteOptionList } from './AutoCompleteOptionList';
-import type { AutoCompleteProps } from './types.AutoComplete';
+import type { AutoCompleteProps, RefInput } from './types.AutoComplete';
 
 import * as S from './styled.AutoComplete';
 
-export const AutoComplete = forwardRef<HTMLDivElement, AutoCompleteProps>(
+export const AutoComplete = forwardRef<RefInput, AutoCompleteProps>(
   (props, ref) => {
     const { options = [] } = props;
 
+    const rootRef = useRef<HTMLDivElement>(null);
     const anchorElRef = useRef<InputRef>(null);
     const anchorEl = anchorElRef.current;
 
@@ -28,27 +36,41 @@ export const AutoComplete = forwardRef<HTMLDivElement, AutoCompleteProps>(
       [inputValue, options]
     );
 
+    useImperativeHandle(
+      ref,
+      () => ({
+        focus() {
+          anchorElRef.current?.focus();
+        },
+        blur() {
+          anchorElRef.current?.blur();
+        },
+      }),
+      []
+    );
+
     return (
       <>
-        <S.AutoComplete ref={ref}>
+        <S.AutoComplete ref={rootRef}>
           <RcInput
-            // ref={anchorElCallbackRef}
             ref={anchorElRef}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onFocus={() => {
               setPopupOpen(!!options.length);
             }}
-            onBlur={() => setPopupOpen(false)}
           />
         </S.AutoComplete>
-        {popupOpen && anchorEl && (
+        {popupOpen && anchorEl && !!filteredOptions.length && (
           <S.AutoCompletePopper anchorEl={anchorEl?.input || null} open>
             <AutoCompleteOptionList
               options={filteredOptions}
               onSelect={(value) => {
                 setInputValue(value);
                 setPopupOpen(false);
+              }}
+              style={{
+                width: rootRef.current ? rootRef.current.clientWidth : 'auto',
               }}
             />
           </S.AutoCompletePopper>

@@ -9,13 +9,14 @@ export interface PopperProps {
   getPopupContainer?: () => Element;
   placement?: Placement;
   children?: ReactNode;
+  className?: string;
 }
 
 const PopperTooltip = forwardRef<
   Element,
   Omit<PopperProps, 'getPopupContainer'>
 >((props, ref) => {
-  const { children, placement, anchorEl, open } = props;
+  const { children, placement, anchorEl, open, className } = props;
 
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(
     null
@@ -31,6 +32,7 @@ const PopperTooltip = forwardRef<
 
   return (
     <div
+      className={className}
       ref={popperElementCallbackRef}
       style={popper.styles['popper']}
       role="tooltip"

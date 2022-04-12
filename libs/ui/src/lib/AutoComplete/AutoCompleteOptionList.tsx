@@ -1,30 +1,39 @@
 import { useRef } from 'react';
 import List from 'rc-virtual-list';
+import * as S from './styled.AutoComplete';
 import type { ListRef } from 'rc-virtual-list';
 import type { AutoCompleteOptionListProps } from './types.AutoComplete';
 
 export const AutoCompleteOptionList = (props: AutoCompleteOptionListProps) => {
-  const { options = [], onSelect } = props;
+  const { options = [], onSelect, style } = props;
 
   const listRef = useRef<ListRef>(null);
 
   return (
-    <>
-      <div role="listbox"></div>
-      <List component={'ul'} itemKey="value" ref={listRef} data={options}>
-        {(option, index, { style }) => {
+    <S.AutoCompleteOptionList>
+      <div className="auto-complete-listbox" role="listbox" />
+      <List
+        className="auto-complete-option-list"
+        style={style}
+        itemKey="value"
+        height={Math.min(320, options.length * 22)}
+        ref={listRef}
+        data={options}
+      >
+        {(option, _index, { style }) => {
           return (
-            <li
+            <div
+              className="auto-complete-option-item"
               onClick={() => {
                 onSelect(option.value);
               }}
               style={style}
             >
               {option.label}
-            </li>
+            </div>
           );
         }}
       </List>
-    </>
+    </S.AutoCompleteOptionList>
   );
 };
