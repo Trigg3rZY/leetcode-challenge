@@ -43,6 +43,9 @@
       "library": {
         "style": "styled-components",
         "linter": "eslint"
+      },
+      "application": {
+        "babel": true
       }
     },
     "@nrwl/web:library": {

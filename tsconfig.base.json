@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@leetcode-challenge/ui": ["libs/ui/src/index.ts"],
-      "@leetcode-challenge/utils": ["libs/utils/src/index.ts"]
+      "@leetcode-challenge/utils": ["libs/utils/src/index.ts"],
+      "@trigg3r-zy/ui": ["libs/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
