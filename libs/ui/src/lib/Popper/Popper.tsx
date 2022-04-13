@@ -1,6 +1,8 @@
-import { forwardRef, ReactNode, useCallback, useState } from 'react';
+import { forwardRef, ReactNode, useRef, useState } from 'react';
 import { usePopper } from 'react-popper';
 import { Portal } from '../Portal';
+import { setRef } from '../utils/setRef';
+import { useForkRef } from '../utils/useForkRef';
 import type { Placement } from '@popperjs/core';
 
 export interface PopperProps {
@@ -13,27 +15,25 @@ export interface PopperProps {
 }
 
 const PopperTooltip = forwardRef<
-  Element,
+  HTMLDivElement,
   Omit<PopperProps, 'getPopupContainer'>
 >((props, ref) => {
   const { children, placement, anchorEl, open, className } = props;
+  const [popperEl, setPopperEl] = useState<HTMLDivElement | null>(null);
 
-  const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(
-    null
-  );
-  const popperElementCallbackRef = useCallback(
-    (el: HTMLDivElement | null) => setPopperElement(el),
-    []
-  );
-
-  const popper = usePopper(anchorEl, open ? popperElement : null, {
+  const popperRef = useRef<HTMLDivElement>(null);
+  const containerRef = useForkRef(popperRef, ref);
+  const popper = usePopper(anchorEl, open ? popperEl : null, {
     placement,
   });
 
   return (
     <div
       className={className}
-      ref={popperElementCallbackRef}
+      ref={(el) => {
+        setRef(containerRef, el);
+        setPopperEl(el);
+      }}
       style={popper.styles['popper']}
       role="tooltip"
       {...popper.attributes['popper']}
@@ -43,14 +43,16 @@ const PopperTooltip = forwardRef<
   );
 });
 
-export const Popper = forwardRef<Element, PopperProps>((props, ref) => {
+export const Popper = forwardRef<HTMLDivElement, PopperProps>((props, ref) => {
   const { getPopupContainer, children, ...tooltipProps } = props;
 
   const container = getPopupContainer?.() || document.body;
 
   return (
     <Portal container={container}>
-      <PopperTooltip {...tooltipProps}>{children}</PopperTooltip>
+      <PopperTooltip ref={ref} {...tooltipProps}>
+        {children}
+      </PopperTooltip>
     </Portal>
   );
 });

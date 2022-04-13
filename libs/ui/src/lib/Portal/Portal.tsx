@@ -3,9 +3,9 @@ import {
   useLayoutEffect,
   useEffect,
   forwardRef,
-  ForwardedRef,
   PropsWithChildren,
 } from 'react';
+import { setRef } from '../utils/setRef';
 import ReactDom from 'react-dom';
 
 export interface PortalProps {
@@ -44,12 +44,4 @@ export const Portal = forwardRef<Element, PropsWithChildren<PortalProps>>(
 
 function getContainer(container: PortalProps['container']) {
   return typeof container === 'function' ? container() : container;
-}
-
-function setRef<T>(ref: ForwardedRef<T>, target: T) {
-  if (typeof ref === 'function') {
-    ref(target);
-  } else if (ref) {
-    ref.current = target;
-  }
 }
