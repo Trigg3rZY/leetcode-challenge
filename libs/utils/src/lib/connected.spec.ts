@@ -1,4 +1,4 @@
-import { connected } from '@leetcode-challenge/utils';
+import { connected } from './connected';
 
 describe('connect specs:', () => {
   it('should connect async method', () => {
