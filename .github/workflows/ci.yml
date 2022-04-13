@@ -19,6 +19,7 @@ jobs:
         node-version: '16'
         
     - run: yarn install --frozen-lockfile
+    - run: yarn global add nx
         
     - name: lint & test affected
       uses: mansagroup/nrwl-nx-action@v2
