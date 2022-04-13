@@ -9,19 +9,21 @@ on:
 jobs:
   lint_test:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
     - name: Use Node.js v16
       uses: actions/setup-node@v3
       with:
         node-version: '16'
-        
+
     - run: yarn install --frozen-lockfile
-        
+
     - name: lint & test affected
       uses: mansagroup/nrwl-nx-action@v2
       with:
         targets: lint,test
-        
+
