@@ -18,7 +18,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-          always-auth: true
           registry-url: https://npm.pkg.github.com/
           
       - run: yarn install --frozen-lockfile
@@ -27,4 +26,4 @@ jobs:
       - run: cd ${GITHUB_WORKSPACE}/dist/libs/ui
       - run: yarn publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.PUBLISH_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
