@@ -10,7 +10,7 @@
     "test": "nx test",
     "prepare": "husky install"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@popperjs/core": "^2.11.5",
     "core-js": "^3.6.5",
