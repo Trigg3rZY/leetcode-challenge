@@ -24,3 +24,20 @@ jobs:
       - run: yarn publish ${GITHUB_WORKSPACE}/dist/libs/ui
         env:
           NODE_AUTH_TOKEN: ${{secrets.PUBLISH_NPM_TOKEN}}
+          
+  publish-grp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://npm.pkg.github.com
+          always-auth: true
+          
+      - run: yarn install --frozen-lockfile
+      - run: yarn test ui
+      - run: yarn build ui
+      - run: yarn publish ${GITHUB_WORKSPACE}/dist/libs/ui
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
