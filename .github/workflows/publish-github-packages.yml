@@ -19,11 +19,11 @@ jobs:
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
-          
+
       - run: yarn install --frozen-lockfile
       - run: yarn test ui
       - run: yarn build ui
       - run: cd ${GITHUB_WORKSPACE}/dist/libs/ui
-      - run: yarn publish
+      - run: yarn publish --new-version ${GITHUB_REF#"refs/tags/"}
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
