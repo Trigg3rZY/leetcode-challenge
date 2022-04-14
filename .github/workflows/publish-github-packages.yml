@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
-      - run: cd ./dist/lib/ui
+      - run: cd ./dist/libs/ui
       - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.PUBLISH_TOKEN}}
