@@ -17,6 +17,7 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
           always-auth: true
+          scope: '@trigg3rzy'
           
       - run: yarn install --frozen-lockfile
       - run: yarn test ui
@@ -34,10 +35,11 @@ jobs:
           node-version: 16
           registry-url: https://npm.pkg.github.com
           always-auth: true
+          scope: '@trigg3rzy'
           
       - run: yarn install --frozen-lockfile
       - run: yarn test ui
       - run: yarn build ui
-      - run: yarn publish ${GITHUB_WORKSPACE}/dist/libs/ui --access public
+      - run: yarn publish ${GITHUB_WORKSPACE}/dist/libs/ui --@trigg3rzy:registry=https://npm.pkg.github.com/
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
