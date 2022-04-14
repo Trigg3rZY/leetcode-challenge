@@ -8,19 +8,7 @@ on:
     types: [created]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16 
-      - run: yarn
-      - run: yarn test ui
-      - run: yarn build ui
-
   publish-gpr:
-    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -31,6 +19,10 @@ jobs:
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
+          
+      - run: yarn install --frozen-lockfile
+      - run: yarn test ui
+      - run: yarn build ui
       - run: cd ${GITHUB_WORKSPACE}/dist/libs/ui
       - run: yarn publish
         env:
