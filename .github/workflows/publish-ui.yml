@@ -21,7 +21,7 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn test ui
       - run: yarn build ui
-      - run: yarn publish ${GITHUB_WORKSPACE}/dist/libs/ui
+      - run: yarn publish ${GITHUB_WORKSPACE}/dist/libs/ui --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.PUBLISH_NPM_TOKEN}}
           
@@ -38,6 +38,6 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn test ui
       - run: yarn build ui
-      - run: yarn publish ${GITHUB_WORKSPACE}/dist/libs/ui
+      - run: yarn publish ${GITHUB_WORKSPACE}/dist/libs/ui --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
