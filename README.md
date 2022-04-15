@@ -4,91 +4,72 @@
 
 This project was generated using [Nx](https://nx.dev).
 
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
+ 该 monorepo 用来完成 LeetCode-OpenSource 的[面试题](https://github.com/LeetCode-OpenSource/hire#%E5%B1%95%E7%8E%B0%E4%BD%A0%E7%9A%84%E8%83%BD%E5%8A%9B)
 
-🔎 **Smart, Fast and Extensible Build System**
+---
 
-## Adding capabilities to your workspace
+## table of contents
+- [x] [基础编程能力](#基础编程能力)
+- [x] [编写复杂的 Typescript 类型](#编写复杂的-typescript-类型)
+- [x] [用 Webpack 实现 predictable long term cache](#用-webpack-实现-predictable-long-term-cache)
+- [x] [编写工程化的组件](#编写工程化的组件)
+- [ ] [用 RxJS 处理复杂的异步业务](#用-rxjs-处理复杂的异步业务)
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+## 基础编程能力
+- [parseError 函数](https://github.com/Trigg3rZY/leetcode-challenge/blob/main/libs/utils/src/lib/parseError.ts#L10)
+- [测试](https://github.com/Trigg3rZY/leetcode-challenge/blob/main/libs/utils/src/lib/parseError.spec.ts)
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+## 编写复杂的 Typescript 类型
+编写了两个类型
+- [ExtractMethodKeys<T>](https://github.com/Trigg3rZY/leetcode-challenge/blob/main/libs/utils/src/lib/connected.ts#L31) 用来获取 Class 中所有方法的类型
+- [UnwrapMethods<T>](https://github.com/Trigg3rZY/leetcode-challenge/blob/main/libs/utils/src/lib/connected.ts#L36) 按题目要求从方法的参数、返回中 unwrap Promise/Action
 
-Below are our core plugins:
+## 用 Webpack 实现 predictable long term cache
+[webpack config](https://github.com/Trigg3rZY/leetcode-challenge/blob/main/apps/webpack-zh/webpack.config.js) 
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
+在项目根目录下执行 
+```
+yarn run build:webpack-zh
+```
+打包产物将输出在 dist/webpack-zh 下
 
-There are also many [community plugins](https://nx.dev/community) you could add.
+## 编写工程化的组件
+[AutoComplete](https://github.com/Trigg3rZY/leetcode-challenge/tree/main/libs/ui/src/lib/AutoComplete)  
 
-## Generate an application
+build: (打包产物将输出在 dist/libs/ui)
+```
+yarn build ui
+```
 
-Run `nx g @nrwl/react:app my-app` to generate an application.
+test:
+```
+yarn test ui
+```
 
-> You can use any of the plugins above to generate applications as well.
+storybook: (目前只有一个简单的例子，文档待完善)
+```
+yarn run nx run ui:storybook
+```
 
-When using Nx, you can create multiple applications and libraries in the same workspace.
+features:
+- [x] 可供输入的输入框
+- [x] 根据输入框输入，以 popper 的形式给出输入提示
+- [x] 点击 suggestions 选项回填到输入框
+- [x] suggestions 列表的虚拟滚动
+- [ ] suggestions 的键盘导航
 
-## Generate a library
+## 用 RxJS 处理复杂的异步业务
+TBD
 
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
+## 持续集成
 
-> You can also use any of the plugins above to generate libraries as well.
+```
+.github/workflow  
+    /ci.yml
+    /publish-ui.yml
+```
+其中 `ci.yml` 将在代码 push 到 main 分支或 pr 发起后 lint 代码并运行宏仓库下的测试用例。得益于 nrwl/nx， 最新的提交将会和代码合并前的 commit 进行比对，根据模块间的依赖关系，只对受影响的部分重新运行测试。
 
-Libraries are shareable across libraries and applications. They can be imported from `@leetcode-challenge/mylib`.
+`publish-ui.yml` 将在 release 创建后，打包 ui lib 并发布到 npm 仓库。
 
-## Development server
-
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
-
-## Build
-
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
-
-Run `nx affected:test` to execute the unit tests affected by a change.
-
-## Running end-to-end tests
-
-Run `nx e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-## Understand your workspace
-
-Run `nx graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
-
-
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
+当然，如果对于一个正式的 ui 库来说，最好能补充一个流程，在 main 分支更新时，将 storybook 构建的文档自动部署。
