@@ -61,10 +61,8 @@ export const AutoComplete = forwardRef<RefInput, AutoCompleteProps>(
       if (typeof value === 'undefined') {
         // 非受控
         setInputValue(newValue);
-      } else {
-        // 受控
-        onChange?.(newValue);
       }
+      onChange?.(newValue);
       if (newValue !== '') {
         setPopupOpen(true);
       }
