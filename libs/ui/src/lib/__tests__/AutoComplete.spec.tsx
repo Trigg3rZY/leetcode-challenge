@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { useRef } from 'react';
 import { AutoComplete } from '../AutoComplete';
 import type { AutoCompleteProps, RefInput } from '../AutoComplete';
@@ -13,13 +14,15 @@ const options = [
 const setup = (props: AutoCompleteProps = {}) => {
   const utils = render(<AutoComplete {...props} />);
   const input = screen.getByRole('combobox') as HTMLInputElement;
-  return { ...utils, input };
+  const user = userEvent.setup();
+  return { ...utils, input, user };
 };
 
-test('should render a combobox', () => {
-  const { input } = setup();
+test('should render a combobox', async () => {
+  const { input, user } = setup();
   expect(input).toBeInTheDocument();
-  fireEvent.change(input, { target: { value: 'foo' } });
+  await user.click(input);
+  await user.keyboard('foo');
   expect(input.value).toBe('foo');
 });
 
@@ -32,23 +35,40 @@ test('should render a listbox with options', () => {
   expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
 });
 
-test('should filter option by input value', () => {
-  const { input } = setup({ options });
-  fireEvent.change(input, { target: { value: 'ba' } });
+test('should filter option by input value', async () => {
+  const { input, user } = setup({ options });
+  await user.click(input);
+  await user.keyboard('ba');
   expect(screen.getAllByRole('option')).toHaveLength(2);
   expect(screen.queryByText('foo')).not.toBeInTheDocument();
 });
 
-test('should trigger prop onSearch when input value changes', () => {
+test('should trigger prop onSearch while texting', async () => {
   const onSearch = jest.fn();
-  const { input } = setup({ onSearch });
-  fireEvent.change(input, { target: { value: 'foo' } });
+  const { input, user } = setup({ onSearch });
+  await user.click(input);
+  await user.keyboard('foo');
+  expect(onSearch).toBeCalledTimes(3);
   expect(onSearch).toBeCalledWith('foo');
-  fireEvent.change(input, { target: { value: 'bar' } });
-  expect(onSearch).toBeCalledTimes(2);
 });
 
-test('should expose forward ref methods that works', () => {
+test('should set value to input after selecting option', async () => {
+  const onSearch = jest.fn();
+  const { input, user } = setup({ onSearch, options });
+  const option = screen.getByText('foo');
+  await user.click(option);
+  expect(input.value).toBe('foo');
+});
+
+test('should be controlled by prop value & onChange', () => {
+  const onChange = jest.fn();
+  const { input } = setup({ value: 'foo', onChange });
+  expect(input.value).toBe('foo');
+  fireEvent.change(input, { target: { value: 'bar' } });
+  expect(onChange).toBeCalledWith('bar');
+});
+
+test('should expose forward ref methods that works', async () => {
   const ForwardRefTestComponent = () => {
     const ref = useRef<RefInput>(null);
     return (
@@ -60,11 +80,12 @@ test('should expose forward ref methods that works', () => {
     );
   };
   render(<ForwardRefTestComponent />);
+  const user = userEvent.setup();
   const input = screen.getByRole('combobox');
 
   expect(input).not.toHaveFocus();
-  fireEvent.click(screen.getByText('focus'));
+  await user.click(screen.getByText('focus'));
   expect(input).toHaveFocus();
-  fireEvent.click(screen.getByText('blur'));
+  await user.click(screen.getByText('blur'));
   expect(input).not.toHaveFocus();
 });
