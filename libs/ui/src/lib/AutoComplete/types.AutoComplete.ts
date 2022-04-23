@@ -8,6 +8,8 @@ interface Option {
 export interface AutoCompleteProps {
   options?: Option[];
   onSearch?: (value: string) => void;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
 export interface AutoCompleteOptionListProps {

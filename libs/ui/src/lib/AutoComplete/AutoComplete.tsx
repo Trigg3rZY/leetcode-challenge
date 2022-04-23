@@ -5,7 +5,6 @@ import {
   useMemo,
   useRef,
   useImperativeHandle,
-  useCallback,
 } from 'react';
 import type { ChangeEvent } from 'react';
 import RcInput, { InputRef } from 'rc-input';
@@ -16,14 +15,13 @@ import * as S from './styled.AutoComplete';
 
 export const AutoComplete = forwardRef<RefInput, AutoCompleteProps>(
   (props, ref) => {
-    const { options = [], onSearch } = props;
+    const { options = [], onSearch, value, onChange } = props;
 
     const rootRef = useRef<HTMLDivElement>(null);
     const anchorElRef = useRef<InputRef>(null);
     const anchorEl = anchorElRef.current;
 
     const [popupOpen, setPopupOpen] = useState(false);
-    const [inputValue, setInputValue] = useState('');
 
     useEffect(() => {
       if (options.length) {
@@ -32,11 +30,6 @@ export const AutoComplete = forwardRef<RefInput, AutoCompleteProps>(
         setPopupOpen(false);
       }
     }, [options.length]);
-
-    const filteredOptions = useMemo(
-      () => options.filter(({ value }) => value.indexOf(inputValue) !== -1),
-      [inputValue, options]
-    );
 
     useImperativeHandle(
       ref,
@@ -51,17 +44,42 @@ export const AutoComplete = forwardRef<RefInput, AutoCompleteProps>(
       []
     );
 
-    const handleInputChange = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        const newValue = e.target.value;
-        setInputValue(newValue);
-        onSearch?.(newValue);
-        if (newValue !== '') {
-          setPopupOpen(true);
-        }
-      },
-      [onSearch]
+    const [inputValue, setInputValue] = useState('');
+
+    if (typeof value !== 'undefined' && value !== inputValue) {
+      // derived state
+      setInputValue(value);
+    }
+
+    const filteredOptions = useMemo(
+      () => options.filter(({ value }) => value.indexOf(inputValue) !== -1),
+      [inputValue, options]
     );
+
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value;
+      if (typeof value === 'undefined') {
+        // 非受控
+        setInputValue(newValue);
+      } else {
+        // 受控
+        onChange?.(newValue);
+      }
+      if (newValue !== '') {
+        setPopupOpen(true);
+      }
+    };
+
+    const handleSelectOption = (inputValue: string) => {
+      if (typeof value === 'undefined') {
+        // 非受控
+        setInputValue(inputValue);
+      } else {
+        // 受控
+        onChange?.(inputValue);
+      }
+      setPopupOpen(false);
+    };
 
     return (
       <>
@@ -72,6 +90,9 @@ export const AutoComplete = forwardRef<RefInput, AutoCompleteProps>(
             ref={anchorElRef}
             value={inputValue}
             onChange={handleInputChange}
+            onInput={() => {
+              onSearch?.(anchorElRef.current?.input?.value || '');
+            }}
             onFocus={() => {
               setPopupOpen(true);
             }}
@@ -84,10 +105,7 @@ export const AutoComplete = forwardRef<RefInput, AutoCompleteProps>(
           <S.AutoCompletePopper anchorEl={anchorEl?.input || null} open>
             <AutoCompleteOptionList
               options={filteredOptions}
-              onSelect={(value) => {
-                setInputValue(value);
-                setPopupOpen(false);
-              }}
+              onSelect={handleSelectOption}
               onMouseDown={(e) => {
                 // do not blur input when select an option
                 e.preventDefault();
