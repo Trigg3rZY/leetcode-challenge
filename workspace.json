@@ -1,6 +1,7 @@
 {
   "version": 2,
   "projects": {
+    "demo": "apps/demo",
     "ui": "libs/ui",
     "utils": "libs/utils",
     "webpack-zh": "apps/webpack-zh"

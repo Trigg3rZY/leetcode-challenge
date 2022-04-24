@@ -52,6 +52,13 @@
       "style": "css",
       "linter": "eslint",
       "unitTestRunner": "none"
+    },
+    "@nrwl/next": {
+      "application": {
+        "style": "css",
+        "linter": "eslint"
+      }
     }
-  }
+  },
+  "defaultProject": "demo"
 }
