@@ -59,7 +59,17 @@ features:
 - [ ] suggestions 的键盘导航
 
 ## 用 RxJS 处理复杂的异步业务
-TBD
+[demo](https://github.com/Trigg3rZY/leetcode-challenge/blob/main/apps/demo/pages/index.tsx)
+```
+yarn start demo
+```
+
+逻辑部分主要由两个自定义 hook 组成
+- [useCountries](https://github.com/Trigg3rZY/leetcode-challenge/blob/main/apps/demo/api-hooks/useCountries.ts) ———— 处理 api 请求，获取 countries 列表（这里用来作为 AutoComplete 的 options）；
+- [useAutoCompleteController](https://github.com/Trigg3rZY/leetcode-challenge/blob/main/apps/demo/api-hooks/useAutoCompleteController.ts) ———— 借助 rxjs 处理特殊的请求逻辑。在 **pipe[0]** 的位置观测输入值的变化，处理**取消请求**的逻辑和**输入超长**的 warning（代码中未完成）；在 **pipe[1]** 的位置加 debounceTime 处理 api 请求逻辑；
+
+目前 demo 代码中，将 `searchStr` 状态维护在 `useAutoCompleteController` 中，`useCountries` 根据 `searchStr` 的变化自动发请求更新待选列表。
+可以将 `useCountries` 改造为可以手动调用的版本，将发请求的方法作为参数传递给 `useAutoCompleteController`，将请求的发起时机也交给 `useAutoCompleteController`，即可完成当前未完成的 **pipe[0]** 的逻辑（再数据流经 **pipe[0]** 时取消之前的请求），`useCountries` 的改造可参考 [`useRequest`](https://ahooks.js.org/guide/upgrade#new-userequest) 等 hooks 请求库。
 
 ## 持续集成
 
